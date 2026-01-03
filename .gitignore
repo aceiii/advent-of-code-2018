@@ -1,4 +1,6 @@
 .DS_Store
 Thumbs.db
 
+.env
+input/
 build/
