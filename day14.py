@@ -13,12 +13,16 @@ def parse_score(line):
 
 def step(score, elves):
     i, j = elves
-    new_score = score[:]
-    i2 = new_score[i]
-    j2 = new_score[j]
-    for c in str(i2 + j2):
-        new_score.append(int(c, 10))
-    return new_score, ((i + i2 + 1) % len(new_score), (j + j2 + 1) % len(new_score))
+    m = score[i]
+    n = score[j]
+    o = m + n
+    d1 = o // 10
+    d2 = o % 10
+    if d1 > 0:
+        score.append(d1)
+    score.append(d2)
+    return ((i + m + 1) % len(score), (j + n + 1) % len(score))
+
 
 def part1(lines):
     N = int(lines[0], 10)
@@ -26,12 +30,30 @@ def part1(lines):
     score = [3, 7]
     elves = (0, 1)
     while len(score) < N + 10:
-        score, elves = step(score, elves)
+        elves = step(score, elves)
     return ''.join(str(d) for d in score[N:N+target])
 
 
+def find(prev_n, score, target):
+    n = len(target)
+    for i in range(prev_n, len(score) - n):
+        if score[i:i+n] == target:
+            return i
+
+
 def part2(lines):
-    pass
+    target = list(map(int, lines[0].strip()))
+    n = len(target)
+    score = [3,7]
+    elves = (0, 1)
+    prev_n = 0
+    while True:
+        elves = step(score, elves)
+        if len(score) % 10000 == 0:
+            ans = find(prev_n, score, target)
+            if ans is not None:
+                return ans
+            prev_n = len(score) - n - 1
 
 
 def main():
